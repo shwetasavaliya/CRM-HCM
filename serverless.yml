@@ -1,0 +1,129 @@
+service: customer-relations-api
+
+package:
+  individually: true
+
+plugins:
+  - serverless-bundle
+  - serverless-offline
+
+custom:
+  bundle:
+    rawFileExtensions:
+      - html
+  splitStacks:
+    nestedStackCount: 20
+    perFunction: true
+    perType: true
+    perGroupFunction: true
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stage: ${opt:stage}
+  region: us-west-1
+  lambdaHashingVersion: 20201221
+  iamRoleStatements:
+    - Effect: Allow
+      Resource: "*"
+      Action:
+        - "rds:*"
+    - Effect: Allow
+      Resource: "*"
+      Action:
+        - "cloudwatch:*"
+    - Effect: Allow
+      Resource: "*"
+      Action:
+        - "ses:*"
+    - Effect: Allow
+      Resource: "*"
+      Action:
+        - "sns:*"
+    - Effect: Allow
+      Resource: "*"
+      Action:
+        - "mobiletargeting:*"
+        - "lambda:*"
+        - "s3:*"
+
+  environment:
+    STAGE: ${opt:stage}
+    SHARED_SECRET: ${file(env-${opt:stage}.json):SHARED_SECRET}
+    DB_HOST: ${file(env-${opt:stage}.json):DB_HOST}
+    DB_USERNAME: ${file(env-${opt:stage}.json):DB_USERNAME}
+    DB_PASSWORD: ${file(env-${opt:stage}.json):DB_PASSWORD}
+    DB_NAME: ${file(env-${opt:stage}.json):DB_NAME}
+    DB_PORT: ${file(env-${opt:stage}.json):DB_PORT}
+    S3_DATA_BUCKET: ${file(env-${opt:stage}.json):S3_DATA_BUCKET}
+
+functions:
+  customer:
+    handler: lambda/customer/customer.handler
+    memorySize: 1024
+    timeout: 30
+    events:
+      - http:
+          path: /customer/login
+          method: POST
+          cors: true
+
+  employee:
+    handler: lambda/employee/employee.handler
+    memorySize: 1024
+    timeout: 30
+    events:
+      - http:
+          path: /employee/register
+          method: POST
+          cors: true
+
+      - http:
+          path: /employee/customer-register
+          method: POST
+          cors: true
+
+      - http:
+          path: /employee/manage-customer
+          method: POST
+          cors: true
+
+      - http:
+          path: /employee/login
+          method: POST
+          cors: true
+
+      - http:
+          path: /employee/manage-itr
+          method: POST
+          cors: true
+
+  general:
+    handler: lambda/general/general.handler
+    memorySize: 1024
+    timeout: 30
+    events:
+      - http:
+          path: /general/image/upload
+          method: POST
+          cors: true
+
+  message:
+    handler: lambda/message/message.handler
+    memorySize: 1024
+    timeout: 30
+    events:
+      - http:
+          path: /message/add
+          method: POST
+          cors: true
+
+      - http:
+          path: /message/get-list
+          method: POST
+          cors: true
+
+      - http:
+          path: /message/conversation/get-list
+          method: POST
+          cors: true

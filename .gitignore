@@ -1,0 +1,9 @@
+node_modules
+dist
+.idea
+.serverless
+package-lock.json
+.history
+.DS_Store
+.webpack
+.env
