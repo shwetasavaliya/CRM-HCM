@@ -40,7 +40,7 @@ export const handler = async function (event, context, callback) {
       response.message = "Invalid Email Id or Password";
       return awsRequestHelper.respondWithJsonBody(200, response);
     }
-
+console.log("::::::::::::::::::")
     const customerData =
       customerResult.rows.length > 0 ? customerResult.rows[0] : {};
 
