@@ -6,6 +6,7 @@ const DBObj = new DBManager();
 const Joi = require("joi");
 
 const validateAction = function (body) {
+  console.log("========test======");
   const ListAction = ["add_itr", "edit_itr", "delete_itr", "get_itr_list"];
   const schema = Joi.object().keys({
     action: Joi.string()
