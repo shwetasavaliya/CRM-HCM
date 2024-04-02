@@ -23,6 +23,14 @@ exports.handler = async function (event, context, callback) {
     case "/employee/manage-itr":
       const manageITRHandler = require("./manage_itr");
       return await manageITRHandler.handler(event, context, callback);
+
+    case "/employee/link-token/generate":
+      const generateLinkTokenHandler = require("./generate_link_token");
+      return await generateLinkTokenHandler.handler(event, context, callback);
+
+    case "/employee/employee-token/generate":
+      const generateEmpTokenHandler = require("./generate_emp_token");
+      return await generateEmpTokenHandler.handler(event, context, callback);
   }
   return awsRequestHelper.respondWithSimpleMessage(
     500,

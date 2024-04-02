@@ -66,7 +66,7 @@ export const handler = async function (event, context, callback) {
       role: employeeData.role,
     };
 
-    var token = utils.createCustomerJWT(payload, "30d");
+    var token = utils.createEmployeeJWT(payload, "30d");
     response.status = true;
     response.message = "Login successfully!";
     response.data = {

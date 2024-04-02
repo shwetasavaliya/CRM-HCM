@@ -98,6 +98,16 @@ functions:
           method: POST
           cors: true
 
+      - http:
+          path: /employee/link-token/generate
+          method: POST
+          cors: true
+
+      - http:
+          path: /employee/employee-token/generate
+          method: POST
+          cors: true
+
   general:
     handler: lambda/general/general.handler
     memorySize: 1024

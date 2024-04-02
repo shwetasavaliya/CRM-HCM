@@ -39,6 +39,9 @@ CREATE TABLE IF NOT EXISTS customer_master (
     driving_number VARCHAR (20),
     driving_url TEXT,
     light_bill_urls  JSONB DEFAULT '[]',
+    itr_file_number INT,
+    itr   _file_name VARCHAR (100),
+    bank_detail_urls JSONB DEFAULT '[]',
     date_created VARCHAR (25),
     date_modified VARCHAR (25),
     is_deleted INT DEFAULT 0
@@ -105,6 +108,15 @@ CREATE TABLE IF NOT EXISTS customer_master (
     _customer_id UUID,
     year VARCHAR(20),
     itr_url JSON DEFAULT '[]',
+    date_created VARCHAR (25),
+    date_modified VARCHAR (25),
+    is_deleted INT DEFAULT 0
+  );
+
+  CREATE TABLE IF NOT EXISTS link_token_master (
+    link_token_id UUID PRIMARY KEY,
+    _employee_id UUID
+    _customer_id UUID,
     date_created VARCHAR (25),
     date_modified VARCHAR (25),
     is_deleted INT DEFAULT 0

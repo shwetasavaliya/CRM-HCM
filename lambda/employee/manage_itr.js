@@ -6,7 +6,6 @@ const DBObj = new DBManager();
 const Joi = require("joi");
 
 const validateAction = function (body) {
-  console.log("========test======");
   const ListAction = ["add_itr", "edit_itr", "delete_itr", "get_itr_list"];
   const schema = Joi.object().keys({
     action: Joi.string()
@@ -138,13 +137,42 @@ const addItr = async function (apiData) {
   try {
     let { customer_id, year, itr_url } = apiData;
 
-    let insertObj = {
-      _customer_id: customer_id,
-      year,
-      itr_url: JSON.stringify(itr_url),
-    };
+    const [customerResult, itrResult] = await Promise.all([
+      DBObj.runQuery(
+        `SELECT * FROM customer_master WHERE customer_uuid = '${customer_id}' AND is_deleted = 0`
+      ),
+      DBObj.runQuery(
+        `SELECT * FROM itr_master WHERE _customer_id = '${customer_id}' AND year = '${year}' AND is_deleted = 0`
+      ),
+    ]);
 
-    await DBObj.dataInsert("itr_master", insertObj);
+    const customerData =
+      customerResult.rows.length > 0 ? customerResult.rows[0] : null;
+
+    const itrData = itrResult.rows.length > 0 ? itrResult.rows[0] : {};
+
+    if (!customerData) {
+      throw new Error("Customer not found!");
+    }
+
+    if (Object.keys(itrData).length > 0) {
+      console.log("========if=======", itrData.itr_id);
+
+      await DBObj.dataUpdate(
+        "itr_master",
+        { itr_url: JSON.stringify(itr_url) },
+        { itr_id: itrData.itr_id }
+      );
+    } else {
+      console.log("========else=======");
+      let insertObj = {
+        _customer_id: customer_id,
+        year,
+        itr_url: JSON.stringify(itr_url),
+      };
+
+      await DBObj.dataInsert("itr_master", insertObj);
+    }
 
     response = {
       status: true,

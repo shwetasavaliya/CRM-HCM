@@ -53,6 +53,9 @@ const validateEditCustomer = function (body) {
     light_bill_urls: Joi.array().items(Joi.string()).optional(),
     is_married: Joi.boolean().optional(),
     date_of_birth: Joi.string().optional(),
+    itr_file_number: Joi.number().optional().allow(null),
+    itr_file_name: Joi.string().optional().allow("", null),
+    bank_detail_urls: Joi.array().items(Joi.string()).optional(),
   });
   return new Promise(async (resolve, reject) => {
     try {
@@ -171,6 +174,9 @@ const editCustomer = async function (apiData, userId) {
       driving_url,
       light_bill_urls = [],
       date_of_birth,
+      itr_file_number,
+      itr_file_name,
+      bank_detail_urls = [],
     } = apiData;
 
     const [customerResult, documentsResult] = await Promise.all([
@@ -219,6 +225,9 @@ const editCustomer = async function (apiData, userId) {
       driving_number,
       driving_url,
       light_bill_urls: JSON.stringify(light_bill_urls),
+      itr_file_number,
+      itr_file_name,
+      bank_detail_urls: JSON.stringify(bank_detail_urls),
     };
 
     let promise = [];
@@ -286,7 +295,7 @@ const getCustomer = async function (apiData, userId) {
       CM.is_married,
       CM.date_of_birth,
       CM.date_created,
-      CASE WHEN COUNT(DM.documents_id) > 0 THEN JSON_AGG(DISTINCT JSONB_BUILD_OBJECT('documents_id',DM.documents_id,'aadhar_number',DM.aadhar_number,'aadhar_front_url',DM.aadhar_front_url,'aadhar_back_url',DM.aadhar_back_url,'pancard_number',DM.pancard_number,'pancard_url',DM.pancard_url,'passport_number',DM.passport_number,'passport_url',DM.passport_url,'passport_expiry_date',DM.passport_expiry_date,'voting_url',DM.voting_url,'birth_certificate_url',DM.birth_certificate_url,'caste_certificate_url',DM.caste_certificate_url,'leaving_certificate_url',DM.leaving_certificate_url,'driving_number',DM.driving_number,'driving_url',DM.driving_url,'light_bill_urls',DM.light_bill_urls ))->0 ELSE '{}' :: JSON END documents
+      CASE WHEN COUNT(DM.documents_id) > 0 THEN JSON_AGG(DISTINCT JSONB_BUILD_OBJECT('documents_id',DM.documents_id,'aadhar_number',DM.aadhar_number,'aadhar_front_url',DM.aadhar_front_url,'aadhar_back_url',DM.aadhar_back_url,'pancard_number',DM.pancard_number,'pancard_url',DM.pancard_url,'passport_number',DM.passport_number,'passport_url',DM.passport_url,'passport_expiry_date',DM.passport_expiry_date,'voting_url',DM.voting_url,'birth_certificate_url',DM.birth_certificate_url,'caste_certificate_url',DM.caste_certificate_url,'leaving_certificate_url',DM.leaving_certificate_url,'driving_number',DM.driving_number,'driving_url',DM.driving_url,'light_bill_urls',DM.light_bill_urls,'itr_file_number',DM.itr_file_number,'itr_file_name',DM.itr_file_name,'bank_detail_urls',DM.bank_detail_urls ))->0 ELSE '{}' :: JSON END documents
       FROM customer_master CM
       LEFT JOIN documents_master DM ON CM.customer_uuid = DM._customer_id AND DM.is_deleted = 0
       WHERE CM.is_deleted = 0 AND CM.customer_uuid = '${customer_id}'
@@ -341,7 +350,7 @@ const getCustomerList = async function (company_id) {
       CM.is_married,
       CM.date_created,
       CM.date_of_birth,
-      CASE WHEN COUNT(DM.documents_id) > 0 THEN JSON_AGG(DISTINCT JSONB_BUILD_OBJECT('documents_id',DM.documents_id,'aadhar_number',DM.aadhar_number,'aadhar_front_url',DM.aadhar_front_url,'aadhar_back_url',DM.aadhar_back_url,'pancard_number',DM.pancard_number,'pancard_url',DM.pancard_url,'passport_number',DM.passport_number,'passport_url',DM.passport_url,'passport_expiry_date',DM.passport_expiry_date,'voting_url',DM.voting_url,'birth_certificate_url',DM.birth_certificate_url,'caste_certificate_url',DM.caste_certificate_url,'leaving_certificate_url',DM.leaving_certificate_url,'driving_number',DM.driving_number,'driving_url',DM.driving_url,'light_bill_urls',DM.light_bill_urls ))->0 ELSE '{}' :: JSON END documents
+      CASE WHEN COUNT(DM.documents_id) > 0 THEN JSON_AGG(DISTINCT JSONB_BUILD_OBJECT('documents_id',DM.documents_id,'aadhar_number',DM.aadhar_number,'aadhar_front_url',DM.aadhar_front_url,'aadhar_back_url',DM.aadhar_back_url,'pancard_number',DM.pancard_number,'pancard_url',DM.pancard_url,'passport_number',DM.passport_number,'passport_url',DM.passport_url,'passport_expiry_date',DM.passport_expiry_date,'voting_url',DM.voting_url,'birth_certificate_url',DM.birth_certificate_url,'caste_certificate_url',DM.caste_certificate_url,'leaving_certificate_url',DM.leaving_certificate_url,'driving_number',DM.driving_number,'driving_url',DM.driving_url,'light_bill_urls',DM.light_bill_urls,'itr_file_number',DM.itr_file_number,'itr_file_name',DM.itr_file_name,'bank_detail_urls',DM.bank_detail_urls ))->0 ELSE '{}' :: JSON END documents
       FROM customer_master CM
       LEFT JOIN documents_master DM ON CM.customer_uuid = DM._customer_id AND DM.is_deleted = 0
       WHERE CM.is_deleted = 0 AND CM._company_id = '${company_id}'
