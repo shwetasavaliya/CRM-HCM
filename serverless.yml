@@ -108,6 +108,11 @@ functions:
           method: POST
           cors: true
 
+      - http:
+          path: /employee/get-list
+          method: GET
+          cors: true    
+
   general:
     handler: lambda/general/general.handler
     memorySize: 1024
