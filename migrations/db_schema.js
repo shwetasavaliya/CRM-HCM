@@ -122,4 +122,18 @@ CREATE TABLE IF NOT EXISTS customer_master (
     is_deleted INT DEFAULT 0
   );
 
+  CREATE TABLE IF NOT EXISTS task_master (
+    task_id UUID PRIMARY KEY,
+        _created_by UUID,
+        _assigned_to UUID,
+        _company_id UUID,
+        completion_date VARCHAR (25),
+        transaction_date VARCHAR (25),
+        description TEXT,
+        status VARCHAR (25),
+        date_created VARCHAR (25),
+        date_modified VARCHAR (25),
+        is_deleted INT DEFAULT 0
+  );
+
 `;

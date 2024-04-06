@@ -123,6 +123,16 @@ functions:
           method: POST
           cors: true
 
+  task:
+    handler: lambda/task/task.handler
+    memorySize: 1024
+    timeout: 30
+    events:
+      - http:
+          path: /task/manage-task
+          method: POST
+          cors: true
+
   message:
     handler: lambda/message/message.handler
     memorySize: 1024
