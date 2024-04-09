@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS customer_master (
     customer_id SERIAL PRIMARY KEY,
     customer_uuid UUID,
     _company_id UUID,
+    _category_id  INT,
     first_name VARCHAR(255),
     middle_name VARCHAR(255),
     last_name VARCHAR(255),
@@ -134,6 +135,15 @@ CREATE TABLE IF NOT EXISTS customer_master (
         date_created VARCHAR (25),
         date_modified VARCHAR (25),
         is_deleted INT DEFAULT 0
+  );
+
+  CREATE TABLE IF NOT EXISTS category_master (
+    category_id SERIAL PRIMARY KEY,
+    _company_id UUID,
+   category_name VARCHAR (50),
+   date_created VARCHAR (25),
+   date_modified VARCHAR (25),
+   is_deleted INT DEFAULT 0
   );
 
 `;
