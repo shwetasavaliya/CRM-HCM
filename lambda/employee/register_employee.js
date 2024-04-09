@@ -10,7 +10,7 @@ const saltRounds = 10;
 const validate = function (body) {
   const schema = Joi.object().keys({
     company_id: Joi.string().optional(),
-    company_name: Joi.string().optional(),
+    company_name: Joi.string().optional().allow(null),
     first_name: Joi.string().required(),
     middle_name: Joi.string().required(),
     last_name: Joi.string().required(),

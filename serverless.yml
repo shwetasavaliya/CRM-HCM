@@ -111,7 +111,12 @@ functions:
       - http:
           path: /employee/get-list
           method: GET
-          cors: true    
+          cors: true
+
+      - http:
+          path: /employee/manage-employee
+          method: POST
+          cors: true
 
   general:
     handler: lambda/general/general.handler
