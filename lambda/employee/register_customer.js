@@ -10,6 +10,7 @@ const saltRounds = 10;
 const validate = function (body) {
   const schema = Joi.object().keys({
     company_id: Joi.string().required(),
+    category_id: Joi.number().required(),
     first_name: Joi.string().required(),
     middle_name: Joi.string().required(),
     last_name: Joi.string().required(),
@@ -41,6 +42,7 @@ export const handler = async function (event, context, callback) {
     await validate(apiData);
     let {
       company_id,
+      category_id,
       first_name,
       middle_name,
       last_name,
@@ -73,6 +75,7 @@ export const handler = async function (event, context, callback) {
     let insertObj = {
       customer_uuid,
       _company_id: company_id,
+      category_id,
       first_name,
       middle_name,
       last_name,

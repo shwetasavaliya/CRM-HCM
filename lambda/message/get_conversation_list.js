@@ -33,6 +33,8 @@ export const handler = async function (event, context, callback) {
         CSM.conversation_id,
         CSM._employee_id,
         CSM._customer_id,
+        CM._category_id,
+        CM1.category_name,
         CM.first_name as customer_first_name,
         CM.middle_name as customer_middle_name,
         CM.last_name as customer_last_name,
@@ -44,6 +46,7 @@ export const handler = async function (event, context, callback) {
         FROM conversations_master CSM
         LEFT JOIN customer_master CM ON CM.customer_uuid = CSM._customer_id AND CM.is_deleted = 0
         LEFT JOIN employee_master EM ON EM.employee_id = CSM._employee_id AND EM.is_deleted = 0
+        LEFT JOIN category_master CM1 ON CM1.category_id = CM._category_id AND CM1.is_deleted = 0
         WHERE CSM.is_deleted = 0 AND CSM._employee_id = '${employee_id}'
         ORDER BY CSM.date_created DESC`);
 

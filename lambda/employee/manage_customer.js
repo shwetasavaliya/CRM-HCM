@@ -30,6 +30,7 @@ const validateAction = function (body) {
 const validateEditCustomer = function (body) {
   const schema = Joi.object().keys({
     customer_id: Joi.string().required(),
+    category_id: Joi.number().optional(),
     first_name: Joi.string().optional(),
     middle_name: Joi.string().optional(),
     last_name: Joi.string().optional(),
@@ -151,6 +152,7 @@ const editCustomer = async function (apiData, userId) {
   try {
     let {
       customer_id,
+      category_id,
       first_name,
       middle_name,
       last_name,
@@ -199,6 +201,7 @@ const editCustomer = async function (apiData, userId) {
     }
 
     let updateObj = {
+      category_id,
       first_name,
       middle_name,
       last_name,
@@ -281,6 +284,7 @@ const getCustomer = async function (apiData, userId) {
       CM.customer_id,
       CM.customer_uuid,
       CM._company_id,
+      CM._category_id,
       CM.first_name,
       CM.middle_name,
       CM.last_name,
@@ -295,11 +299,13 @@ const getCustomer = async function (apiData, userId) {
       CM.is_married,
       CM.date_of_birth,
       CM.date_created,
+      CASE WHEN COUNT(CM1.category_id) > 0 THEN JSON_AGG(JSONB_BUILD_OBJECT('category_id',CM1.category_id,'category_name',CM1.category_name))->0 ELSE '{}' :: JSON END category,
       CASE WHEN COUNT(DM.documents_id) > 0 THEN JSON_AGG(DISTINCT JSONB_BUILD_OBJECT('documents_id',DM.documents_id,'aadhar_number',DM.aadhar_number,'aadhar_front_url',DM.aadhar_front_url,'aadhar_back_url',DM.aadhar_back_url,'pancard_number',DM.pancard_number,'pancard_url',DM.pancard_url,'passport_number',DM.passport_number,'passport_url',DM.passport_url,'passport_expiry_date',DM.passport_expiry_date,'voting_url',DM.voting_url,'birth_certificate_url',DM.birth_certificate_url,'caste_certificate_url',DM.caste_certificate_url,'leaving_certificate_url',DM.leaving_certificate_url,'driving_number',DM.driving_number,'driving_url',DM.driving_url,'light_bill_urls',DM.light_bill_urls,'itr_file_number',DM.itr_file_number,'itr_file_name',DM.itr_file_name,'bank_detail_urls',DM.bank_detail_urls ))->0 ELSE '{}' :: JSON END documents
       FROM customer_master CM
       LEFT JOIN documents_master DM ON CM.customer_uuid = DM._customer_id AND DM.is_deleted = 0
+      LEFT JOIN category_master CM1 ON CM1.category_id = CM._category_id AND CM1.is_deleted = 0 
       WHERE CM.is_deleted = 0 AND CM.customer_uuid = '${customer_id}'
-      GROUP BY CM.customer_id`);
+      GROUP BY CM.customer_id `);
 
     const customerData =
       customerResult.rows.length > 0 ? customerResult.rows[0] : {};
@@ -336,6 +342,7 @@ const getCustomerList = async function (company_id) {
       CM.customer_id,
       CM.customer_uuid,
       CM._company_id,
+      CM._category_id,
       CM.first_name,
       CM.middle_name,
       CM.last_name,
@@ -350,11 +357,13 @@ const getCustomerList = async function (company_id) {
       CM.is_married,
       CM.date_created,
       CM.date_of_birth,
+      CASE WHEN COUNT(CM1.category_id) > 0 THEN JSON_AGG(JSONB_BUILD_OBJECT('category_id',CM1.category_id,'category_name',CM1.category_name))->0 ELSE '{}' :: JSON END category,
       CASE WHEN COUNT(DM.documents_id) > 0 THEN JSON_AGG(DISTINCT JSONB_BUILD_OBJECT('documents_id',DM.documents_id,'aadhar_number',DM.aadhar_number,'aadhar_front_url',DM.aadhar_front_url,'aadhar_back_url',DM.aadhar_back_url,'pancard_number',DM.pancard_number,'pancard_url',DM.pancard_url,'passport_number',DM.passport_number,'passport_url',DM.passport_url,'passport_expiry_date',DM.passport_expiry_date,'voting_url',DM.voting_url,'birth_certificate_url',DM.birth_certificate_url,'caste_certificate_url',DM.caste_certificate_url,'leaving_certificate_url',DM.leaving_certificate_url,'driving_number',DM.driving_number,'driving_url',DM.driving_url,'light_bill_urls',DM.light_bill_urls,'itr_file_number',DM.itr_file_number,'itr_file_name',DM.itr_file_name,'bank_detail_urls',DM.bank_detail_urls ))->0 ELSE '{}' :: JSON END documents
       FROM customer_master CM
       LEFT JOIN documents_master DM ON CM.customer_uuid = DM._customer_id AND DM.is_deleted = 0
+      LEFT JOIN category_master CM1 ON CM1.category_id = CM._category_id AND CM1.is_deleted = 0 
       WHERE CM.is_deleted = 0 AND CM._company_id = '${company_id}'
-      GROUP BY CM.customer_id`);
+      GROUP BY CM.customer_id `);
 
     const customerData =
       customerResult.rows.length > 0 ? customerResult.rows : [];
