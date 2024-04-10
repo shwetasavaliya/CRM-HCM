@@ -41,7 +41,8 @@ CREATE TABLE IF NOT EXISTS customer_master (
     driving_url TEXT,
     light_bill_urls  JSONB DEFAULT '[]',
     itr_file_number INT,
-    itr   _file_name VARCHAR (100),
+    itr_file_name VARCHAR (100),
+    itr_password VARCHAR (100),
     bank_detail_urls JSONB DEFAULT '[]',
     date_created VARCHAR (25),
     date_modified VARCHAR (25),
@@ -145,5 +146,31 @@ CREATE TABLE IF NOT EXISTS customer_master (
    date_modified VARCHAR (25),
    is_deleted INT DEFAULT 0
   );
+
+  CREATE TABLE IF NOT EXISTS task_history_master (
+    task_history_id SERIAL PRIMARY KEY,
+    task_id UUID ,
+    _created_by UUID,
+    _assigned_to UUID,
+    completion_date VARCHAR (25),
+    transaction_date VARCHAR (25),
+    description TEXT,
+    status VARCHAR (25),
+    date_created VARCHAR (25),
+    date_modified VARCHAR (25),
+    is_deleted INT DEFAULT 0
+);
+
+CREATE TABLE IF NOT EXISTS notes_master (
+  note_id SERIAL PRIMARY KEY,
+  _company_id UUID ,
+  title TEXT,
+  note_date VARCHAR(50),
+  color_code VARCHAR (25),
+  description TEXT,
+  date_created VARCHAR (25),
+  date_modified VARCHAR (25),
+  is_deleted INT DEFAULT 0
+);
 
 `;

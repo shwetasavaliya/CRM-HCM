@@ -75,7 +75,7 @@ export const handler = async function (event, context, callback) {
     let insertObj = {
       customer_uuid,
       _company_id: company_id,
-      category_id,
+      _category_id: category_id,
       first_name,
       middle_name,
       last_name,

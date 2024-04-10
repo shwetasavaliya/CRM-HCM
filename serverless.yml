@@ -138,6 +138,26 @@ functions:
           method: POST
           cors: true
 
+  category:
+    handler: lambda/category/category.handler
+    memorySize: 1024
+    timeout: 30
+    events:
+      - http:
+          path: /category/manage-category
+          method: POST
+          cors: true
+
+  notes:
+    handler: lambda/notes/notes.handler
+    memorySize: 1024
+    timeout: 30
+    events:
+      - http:
+          path: /notes/manage-notes
+          method: POST
+          cors: true
+
   message:
     handler: lambda/message/message.handler
     memorySize: 1024
