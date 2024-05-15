@@ -138,6 +138,21 @@ CREATE TABLE IF NOT EXISTS customer_master (
         is_deleted INT DEFAULT 0
   );
 
+  CREATE TABLE IF NOT EXISTS sub_task_master (
+    sub_task_id UUID PRIMARY KEY,
+    _task_id UUID,
+    _created_by UUID,
+    _assigned_to UUID,
+    _company_id UUID,
+    completion_date VARCHAR (25),
+    transaction_date VARCHAR (25),
+    description TEXT,
+    status VARCHAR (25),
+    date_created VARCHAR (25),
+    date_modified VARCHAR (25),
+    is_deleted INT DEFAULT 0
+    );
+
   CREATE TABLE IF NOT EXISTS category_master (
     category_id SERIAL PRIMARY KEY,
     _company_id UUID,
@@ -149,7 +164,8 @@ CREATE TABLE IF NOT EXISTS customer_master (
 
   CREATE TABLE IF NOT EXISTS task_history_master (
     task_history_id SERIAL PRIMARY KEY,
-    task_id UUID ,
+    _task_id UUID ,
+    _sub_task_id UUID,
     _created_by UUID,
     _assigned_to UUID,
     completion_date VARCHAR (25),
